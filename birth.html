@@ -3,19 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title> name of birthday celebrant</title>
+<title>For Joet!</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Caveat:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   /* ============ TOKENS ============ */
   :root{
-    --ink:#241526;
-    --maroon:#43213a;
+    --ink:#160918;
+    --maroon:#421135;
     --maroon-2:#5a2c45;
-    --coral:#ff8a65;
+    --coral:#f5815e;
     --coral-dim:#c96a4e;
-    --gold:#f0c879;
+    --gold:#fdcc6a;
     --paper:#fbf1e4;
     --paper-dim:#efe2cc;
     --rose:#d98a93;
@@ -57,7 +57,7 @@
     .ember{animation:none; display:none;}
   }
 
-  /* === COVER / SEAL === */
+  /* ============ COVER / SEAL ============ */
   #cover{
     position:fixed; inset:0; z-index:10;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
@@ -170,39 +170,59 @@
   .play-btn:hover{transform:translateY(-2px); background:var(--gold);}
   .play-btn svg{width:14px;height:14px;}
 
-  /* closing / cake */
-  .closing{text-align:center; padding-bottom:30px;}
-  .cake-zone{display:flex; flex-direction:column; align-items:center; margin:14px 0 26px;}
-  .cake-btn{padding:14px; background:none;}
-  .candles{
-    display:flex; justify-content:center; align-items:flex-end; gap:3px;
-    flex-wrap:wrap; max-width:260px; margin:0 auto 2px; position:relative; z-index:2;
-  }
-  .candle-mini{width:4px; height:34px; position:relative;}
-  .candle-mini .stick{
-    position:absolute; bottom:0; left:0; width:100%; height:70%; border-radius:1px;
-  }
-  .candle-mini .flame-mini{
-    position:absolute; bottom:70%; left:50%; transform:translateX(-50%);
-    width:7px; height:11px; border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+  /* closing / candle */
+ /* closing / cake */
+.cake-zone{display:flex; flex-direction:column; align-items:center; margin:14px 0 26px;}
+.cake-btn{padding:14px; background:none;}
+.candles{
+  display:flex; justify-content:center; align-items:flex-end; gap:3px;
+  flex-wrap:wrap; max-width:260px; margin:0 auto 2px; position:relative; z-index:2;
+}
+.candle-mini{width:4px; height:34px; position:relative;}
+.candle-mini .stick{
+  position:absolute; bottom:0; left:0; width:100%; height:70%; border-radius:1px;
+}
+.candle-mini .flame-mini{
+  position:absolute; bottom:70%; left:50%; transform:translateX(-50%);
+  width:7px; height:11px; border-radius:50% 50% 50% 50% / 65% 65% 35% 35%;
+  background:radial-gradient(circle at 50% 70%, #fff3c4, var(--coral) 60%, transparent 80%);
+  transition:transform .4s var(--ease), opacity .4s var(--ease);
+  animation:flicker 1.4s ease-in-out infinite;
+}
+.candle-mini .flame-mini.out{transform:translateX(-50%) scale(0); opacity:0;}
+.cake{width:260px; height:60px; position:relative; z-index:1;}
+.cake-icing{
+  position:absolute; top:0; left:0; right:0; height:18px;
+  background:var(--paper); border-radius:50% 50% 0 0 / 100% 100% 0 0;
+}
+.cake-body{
+  position:absolute; top:14px; left:0; right:0; bottom:0;
+  background:linear-gradient(180deg, var(--coral-dim), var(--maroon-2));
+  border-radius:0 0 8px 8px;
+}
+  
+  .wick{position:absolute; bottom:60px; left:50%; transform:translateX(-50%); width:2px; height:8px; background:#3a2a2e;}
+  .flame{
+    position:absolute; bottom:66px; left:50%; transform:translateX(-50%);
+    width:16px; height:24px; border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
     background:radial-gradient(circle at 50% 70%, #fff3c4, var(--coral) 60%, transparent 80%);
-    transition:transform .4s var(--ease), opacity .4s var(--ease);
-    animation:flicker 1.4s ease-in-out infinite;
+    filter:blur(.2px);
+    animation:flicker 1.6s ease-in-out infinite;
+    transition:transform .45s var(--ease), opacity .45s var(--ease);
   }
   @keyframes flicker{
     0%,100%{transform:translateX(-50%) scale(1) rotate(0deg);}
     50%{transform:translateX(-50%) scale(1.08) rotate(2deg);}
   }
-  .candle-mini .flame-mini.out{transform:translateX(-50%) scale(0); opacity:0;}
-  .cake{width:260px; height:60px; position:relative; z-index:1;}
-  .cake-icing{
-    position:absolute; top:0; left:0; right:0; height:18px;
-    background:var(--paper); border-radius:50% 50% 0 0 / 100% 100% 0 0;
+  .flame.out{transform:translateX(-50%) scale(0); opacity:0;}
+  .smoke{
+    position:absolute; bottom:84px; left:50%; width:6px; height:6px; border-radius:50%;
+    background:rgba(255,255,255,.5); opacity:0; pointer-events:none;
   }
-  .cake-body{
-    position:absolute; top:14px; left:0; right:0; bottom:0;
-    background:linear-gradient(180deg, var(--coral-dim), var(--maroon-2));
-    border-radius:0 0 8px 8px;
+  .smoke.go{animation:smokeUp 1.4s ease-out forwards;}
+  @keyframes smokeUp{
+    0%{opacity:.6; transform:translate(-50%,0) scale(1);}
+    100%{opacity:0; transform:translate(calc(-50% + 14px), -70px) scale(3);}
   }
   .wish-line{font-size:14px; color:var(--text-soft); margin-top:6px;}
   .wish-line.show{color:var(--gold);}
@@ -231,27 +251,27 @@
 
 <!-- ============ COVER ============ -->
 <section id="cover">
-  <p class="envelope-label">for Joet</p>
-  <p class="envelope-sub">a small birthday thing</p>
+  <p class="envelope-label">for Joet 🎂 </p>
+  <p class="envelope-sub">something cringe 😊to get you started🙃</p>
   <button class="seal" id="sealBtn" aria-label="Open your birthday surprise">
     <svg viewBox="0 0 24 24" fill="none" stroke="#fbf1e4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 21s-7-4.6-9.3-9C1 8.5 2.4 5 6 5c2.1 0 3.4 1.2 4 2 .6-.8 1.9-2 4-2 3.6 0 5 3.5 3.3 7C19 16.4 12 21 12 21z"/>
     </svg>
   </button>
-  <p class="tap-hint">tap to open</p>
+  <p class="tap-hint">tap to open🤭</p>
 </section>
 
 <!-- ============ CARD ============ -->
 <main id="card">
 
   <section class="letter">
-    <p class="eyebrow">happy birthday</p>
+    <p class="eyebrow">happy birthday twat👽</p>
     <div class="letter-card">
-      <h1 class="letter-title">name of birthday celebrant,</h1>
-      <p>message to celebrant</p>
-      <p>message to celebrant</p>
-      <p>message to celebrant.</p>
-      <p class="signoff">with love, always</p>
+      <h1 class="letter-title">Joet,</h1>
+      <p>I hope today feels exactly how a birthday should &mdash; easy, warm, and peaceful.</p>
+      <p>I don't say it enough (not like am going to start saying it anyway🫥),<i>(ps: i did my emojis on my own)</i> but I love how you make ordinary days feel lighter just by being in them😏. You've got this calm, this kindness that I notice more and more the longer I know you🫂.</p>
+      <p>Here's to another year of inside jokes, late-nights, and whatever adventures we are yet to have😆 &mdash; I already know there is more. I'm so glad I get to celebrate you today, and every day after🫂.</p>
+      <p class="signoff">with love, 🫶</p>
     </div>
   </section>
 
@@ -261,25 +281,33 @@
     <div class="strip">
       <figure class="polaroid">
         <div class="photo-slot" style="--ph-bg:var(--rose)">
-          <!-- Replace with: <img src="YOUR_PHOTO_URL" alt=""> -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fbf1e4" stroke-width="1.4"><path d="M12 21s-7-4.6-9.3-9C1 8.5 2.4 5 6 5c2.1 0 3.4 1.2 4 2 .6-.8 1.9-2 4-2 3.6 0 5 3.5 3.3 7C19 16.4 12 21 12 21z"/></svg>
+
+            <img src="aaa.png" alt="">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fbf1e4" stroke-width="1.4"><path d="PYTHON\bbb.png"/></svg>
         </div>
-        <figcaption class="polaroid-cap">this one</figcaption>
+
+        <figcaption class="polaroid-cap">this one 😁 where you looked rachet with disorganised hair😐</figcaption>
       </figure>
       <figure class="polaroid">
-        <div class="photo-slot" style="--ph-bg:var(--coral-dim)">
-          <!-- Replace with: <img src="YOUR_PHOTO_URL" alt=""> -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="#fbf1e4" stroke-width="1.4"><path d="M12 21s-7-4.6-9.3-9C1 8.5 2.4 5 6 5c2.1 0 3.4 1.2 4 2 .6-.8 1.9-2 4-2 3.6 0 5 3.5 3.3 7C19 16.4 12 21 12 21z"/></svg>
+
+        <div class="photo-slot" style="--ph-bg:var(--gold)">
+
+          <img src="bbb.png" alt=""> 
+                 
         </div>
-        <figcaption class="polaroid-cap">and this one</figcaption>
+        <figcaption class="polaroid-cap">and this one, my all time favourite, exercising my freewill🤣</figcaption>
       </figure>
+
       <figure class="polaroid">
         <div class="photo-slot" style="--ph-bg:var(--gold)">
-          <!-- Replace with: <img src="YOUR_PHOTO_URL" alt=""> -->
-          <svg viewBox="0 0 24 24" fill="none" stroke="#3a2a2e" stroke-width="1.4"><path d="M12 21s-7-4.6-9.3-9C1 8.5 2.4 5 6 5c2.1 0 3.4 1.2 4 2 .6-.8 1.9-2 4-2 3.6 0 5 3.5 3.3 7C19 16.4 12 21 12 21z"/></svg>
+          
+          <img src="bbb.jpeg" alt="">
+          
         </div>
-        <figcaption class="polaroid-cap">be honest, your favorite</figcaption>
+        <figcaption class="polaroid-cap">be honest, your favorite☺️</figcaption>
       </figure>
+
     </div>
   </section>
 
@@ -295,8 +323,8 @@
         <button class="vinyl" id="vinylBtn" aria-label="Play our song"></button>
       </div>
       <div class="song-info">
-        <p class="song-label">our song</p>
-        <p class="song-name" id="songName">add yours &mdash; see note below</p>
+        <p class="song-label">remember Alec Benjamin was someone we both found ourselves listening to when we had just started friendly hanging out</p>
+        <p class="song-name" id="songName">remember Alec Benjamin was someone we both found ourselves listening to when we had just started friendly hanging out😊🥲 &mdash; </p>
         <a class="play-btn" id="songLink" href="#" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
           listen
@@ -306,32 +334,30 @@
   </section>
 
   <section class="closing">
-    <p class="eyebrow" style="justify-content:center;">make a wish</p>
-    <div class="cake-zone">
-      <button class="cake-btn" id="cakeBtn" aria-label="Blow out all the candles">
-        <div class="candles" id="candles"></div>
-        <div class="cake">
-          <div class="cake-icing"></div>
-          <div class="cake-body"></div>
-        </div>
-      </button>
-      <p class="wish-line" id="wishLine">tap to blow them all out</p>
-    </div>
-    <p class="final-sig">happy birthday, ###🤍</p>
+    
+  <p class="eyebrow" style="justify-content:center;">make a wish</p>
+  <div class="cake-zone">
+    <button class="cake-btn" id="cakeBtn" aria-label="Blow out all the candles">
+      <div class="candles" id="candles"></div>
+      <div class="cake">
+        <div class="cake-icing"></div>
+        <div class="cake-body"></div>
+      </div>
+    </button>
+    <p class="wish-line" id="wishLine">tap to blow them all out😮‍💨</p>
+  </div>
+  <p class="final-sig">happy birthday, Joet 🤍</p>
+
   </section>
 
-  <footer>made with love, for one specific birthday</footer>
+  <footer>made with love + ai ofcourse 🤪, for one specific birthday</footer>
 </main>
 
 <script>
-  // ====================================================================
-  // EDIT ME — personalize before sending
-  // ====================================================================
-  const SONG_URL = "";           // paste a Spotify/YouTube link, e.g. "https://open.spotify.com/track/..."
-  const SONG_NAME = "";          // e.g. "Sunday Best — Surfaces"
-  // To add real photos: find the three <div class="photo-slot"> blocks above
-  // and replace the commented line with: <img src="YOUR_PHOTO_URL" alt="">
-  // ====================================================================
+
+  const SONG_URL = "https://open.spotify.com/track/7JSSJf4TcJDv8KL6UO8FGH?si=x58i0-XZQhWLfY_JMLaQHg";           // paste a Spotify/YouTube link, e.g. "https://open.spotify.com/track/..."
+  const SONG_NAME = "🥲🥲";       
+  
 
   if (SONG_URL) {
     document.getElementById('songLink').href = SONG_URL;
@@ -377,30 +403,32 @@
     tonearm.classList.toggle('down', playing);
   });
 
+  // candle
   // cake — 22 candles
-  const candleHost = document.getElementById('candles');
-  const stickColors = ['var(--gold)', 'var(--rose)', 'var(--paper)'];
-  for (let i = 0; i < 22; i++) {
-    const c = document.createElement('div');
-    c.className = 'candle-mini';
-    c.innerHTML = `<div class="flame-mini"></div><div class="stick" style="background:${stickColors[i % stickColors.length]}"></div>`;
-    candleHost.appendChild(c);
-  }
+const candleHost = document.getElementById('candles');
+const stickColors = ['var(--gold)', 'var(--rose)', 'var(--paper)'];
+for (let i = 0; i < 22; i++) {
+  const c = document.createElement('div');
+  c.className = 'candle-mini';
+  c.innerHTML = `<div class="flame-mini"></div><div class="stick" style="background:${stickColors[i % stickColors.length]}"></div>`;
+  candleHost.appendChild(c);
+}
 
-  const cakeBtn = document.getElementById('cakeBtn');
-  const wishLine = document.getElementById('wishLine');
-  let blown = false;
-  cakeBtn.addEventListener('click', () => {
-    if (blown) return;
-    blown = true;
-    const flames = candleHost.querySelectorAll('.flame-mini');
-    flames.forEach((f, i) => {
-      setTimeout(() => f.classList.add('out'), i * 35 + Math.random() * 60);
-    });
-    wishLine.textContent = 'wish made ✨';
-    wishLine.classList.add('show');
-    setTimeout(() => burstConfetti(cakeBtn.getBoundingClientRect()), 22 * 35 + 200);
+const cakeBtn = document.getElementById('cakeBtn');
+const wishLine = document.getElementById('wishLine');
+let blown = false;
+cakeBtn.addEventListener('click', () => {
+  if (blown) return;
+  blown = true;
+  const flames = candleHost.querySelectorAll('.flame-mini');
+  flames.forEach((f, i) => {
+    setTimeout(() => f.classList.add('out'), i * 35 + Math.random() * 60);
   });
+  wishLine.textContent = 'wish made ✨';
+  wishLine.classList.add('show');
+  setTimeout(() => burstConfetti(cakeBtn.getBoundingClientRect()), 22 * 35 + 200);
+});
+  
 
   function burstConfetti(rect){
     const colors = ['#ff8a65', '#f0c879', '#d98a93', '#fbf1e4'];
