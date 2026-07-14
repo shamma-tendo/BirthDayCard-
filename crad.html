@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Birthday Card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: radial-gradient(circle at top left, rgba(255,255,255,0.8), transparent 24%),
+                        radial-gradient(circle at bottom right, rgba(182, 114, 255, 0.16), transparent 25%),
+                        linear-gradient(180deg, #f6ede2 0%, #fff7f0 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            max-width: 920px;
+            width: 100%;
+            background: #fbf4ed;
+            border-radius: 32px;
+            box-shadow: 0 30px 80px rgba(36, 30, 58, 0.14);
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 2rem;
+        }
+
+        .photo-panel,
+        .text-panel {
+            width: 100%;
+        }
+
+        .photo-panel {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .photo-frame {
+            width: 100%;
+            max-width: 380px;
+            aspect-ratio: 4 / 5;
+            background: #fff;
+            border-radius: 28px;
+            padding: 1rem;
+            border: 1px solid rgba(34, 30, 48, 0.08);
+            box-shadow: 0 22px 50px rgba(35, 29, 54, 0.12);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .photo-frame::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: 90px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.85);
+            transform: rotate(-5deg);
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.08);
+        }
+
+        .slideshow-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: #f6f0e8;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        #slideImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }
+
+        .slideshow-controls {
+            display: none;
+        }
+
+        .text-panel {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.45rem 0.9rem;
+            background: rgba(255, 255, 255, 0.75);
+            border-radius: 999px;
+            font-size: 0.85rem;
+            color: #6f4f8f;
+            letter-spacing: 0.04em;
+            width: fit-content;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(111,79,143,0.16);
+        }
+
+        .title {
+            font-size: clamp(2.4rem, 3.4vw, 4.2rem);
+            line-height: 0.95;
+            font-family: 'Segoe Script', 'Brush Script MT', cursive;
+            color: #271f35;
+            margin-bottom: 0.7rem;
+        }
+
+        .subtitle {
+            color: #5e4962;
+            font-size: 1rem;
+            max-width: 420px;
+            line-height: 1.75;
+            margin-bottom: 1.8rem;
+        }
+
+        .message-card {
+            background: #fff;
+            border-radius: 26px;
+            padding: 1.8rem;
+            border: 1px solid rgba(112, 82, 143, 0.12);
+            box-shadow: 0 24px 45px rgba(112, 82, 143, 0.08);
+        }
+
+        .message-preview {
+            margin: 0;
+            padding: 0;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            line-height: 1.85;
+            color: #4b3f52;
+            min-height: auto;
+        }
+
+        .action-row {
+            margin-top: 1.5rem;
+        }
+
+        .play-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.95rem 1.8rem;
+            border-radius: 999px;
+            border: none;
+            background: linear-gradient(135deg, #8b61ff, #ff85b2);
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 18px 35px rgba(139, 97, 255, 0.24);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 24px 45px rgba(139, 97, 255, 0.28);
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            color: #7a627d;
+        }
+
+        @media (max-width: 860px) {
+            .card {
+                grid-template-columns: 1fr;
+            }
+
+            .text-panel {
+                padding-top: 0;
+            }
+        }
+
+        /* SONG COMPOSER SECTION */
+        .control-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .control-group label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .tempo-display {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .note-buttons {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .note-btn {
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .note-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .play-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .play-controls button {
+            flex: 1;
+        }
+
+        .melody-display {
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #333;
+            word-break: break-all;
+            min-height: 40px;
+        }
+
+        .melody-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        /* CODE SECTION */
+        .code-section {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        .code-section h3 {
+            color: #4ec9b0;
+            margin-bottom: 12px;
+        }
+
+        .code-line {
+            line-height: 1.6;
+            color: #ce9178;
+        }
+
+        .code-comment {
+            color: #6a9955;
+        }
+
+        .code-keyword {
+            color: #569cd6;
+        }
+
+        .code-function {
+            color: #dcdcaa;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="photo-panel">
+            <div class="photo-frame">
+                <div class="slideshow-container">
+                    <img id="slideImage" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23fff' width='400' height='500'/%3E%3Ctext x='200' y='260' font-size='22' fill='%23999' text-anchor='middle' dy='.3em'%3ENo photos yet%3C/text%3E%3C/svg%3E" alt="Slideshow">
+                </div>
+            </div>
+        </div>
+
+        <div class="text-panel">
+            <div class="brand">✨</div>
+            <div class="title">Happy Birthday Shawn! 🎉</div>
+            <div class="subtitle">May your day be as bright as your smile and as lovely as your heart. 💖</div>
+            <div class="message-card">
+                <div class="message-preview" id="messagePreview">"Happy Birthday! I know I’ve been a terrible person, but I still think about you often. I hope life is treating you well. I’d love to hear what you’ve been up to. Have a great one! 🎂"</div>
+                <div class="action-row">
+                    <button class="play-button" type="button" onclick="playMusic()">Play music 🎵</button>
+                </div>
+                <div class="footer-note">With love ❤️</div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="backgroundAudio" src="SZA - Snooze (Audio).mp3" autoplay loop playsinline></audio>
+
+    <script>
+        // ========== STATE ==========
+        let currentPhotoIndex = 0;
+        let photos = ['s1.jpg', 's2.jpg', 's3.jpg', 's4.jpg', 's5.jpg'];
+        let melody = [];
+
+        // ========== PHOTO SLIDESHOW LOGIC ==========
+        const photoInput = document.getElementById('photoInput');
+        if (photoInput) {
+            photoInput.addEventListener('change', function(e) {
+                const files = Array.from(e.target.files);
+                if (files.length > 0) {
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function(event) {
+                            photos.push(event.target.result);
+                            currentPhotoIndex = 0;
+                            displayPhoto();
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+        }
+
+        function displayPhoto() {
+            const image = document.getElementById('slideImage');
+            if (!image) return;
+
+            if (photos.length > 0) {
+                image.src = photos[currentPhotoIndex];
+            } else {
+                image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225'%3E%3Crect fill='%23ddd' width='400' height='225'/%3E%3Ctext x='200' y='112' font-size='18' fill='%23999' text-anchor='middle' dy='.3em'%3ENo photos yet - click to add%3C/text%3E%3C/svg%3E";
+            }
+        }
+
+        let slideshowIntervalId;
+
+        function nextImage() {
+            if (photos.length > 0) {
+                currentPhotoIndex = (currentPhotoIndex + 1) % photos.length;
+                displayPhoto();
+            }
+        }
+
+        function previousImage() {
+            if (photos.length > 0) {
+                currentPhotoIndex = (currentPhotoIndex - 1 + photos.length) % photos.length;
+                displayPhoto();
+            }
+        }
+
+        function startAutoSlideshow() {
+            clearInterval(slideshowIntervalId);
+            slideshowIntervalId = setInterval(() => {
+                nextImage();
+            }, 7000);
+        }
+
+        function tryAutoplayAudio() {
+            const audio = document.getElementById('backgroundAudio');
+            if (!audio) return;
+            const promise = audio.play();
+            if (promise !== undefined) {
+                promise.catch(() => {
+                    console.warn('Audio autoplay blocked. Interaction may be required.');
+                });
+            }
+        }
+
+        function playMusic() {
+            const audio = document.getElementById('backgroundAudio');
+            if (!audio) return;
+            audio.play().catch(() => {
+                console.warn('Unable to play audio automatically.');
+            });
+        }
+
+        // Initialize slideshow immediately if photos are present
+        displayPhoto();
+        startAutoSlideshow();
+        window.addEventListener('load', tryAutoplayAudio);
+
+        // ========== MESSAGE LOGIC ==========
+        document.getElementById('message').addEventListener('input', function() {
+            document.getElementById('messagePreview').textContent = 
+                this.value || '(empty message)';
+        });
+
+        // ========== TEMPO LOGIC ==========
+        document.getElementById('tempo').addEventListener('input', function() {
+            document.getElementById('tempoValue').textContent = this.value;
+        });
+
+        // ========== SONG COMPOSER LOGIC ==========
+        function addNote(note) {
+            melody.push(note);
+            updateMelodyDisplay();
+        }
+
+        function updateMelodyDisplay() {
+            if (melody.length === 0) {
+                document.getElementById('melodyDisplay').textContent = 
+                    'No notes yet - click above to start composing!';
+            } else {
+                document.getElementById('melodyDisplay').textContent = melody.join(' ');
+            }
+        }
+
+        function clearSong() {
+            melody = [];
+            updateMelodyDisplay();
+        }
+
+        function playSong() {
+            if (melody.length === 0) {
+                alert('Add some notes first!');
+                return;
+            }
+            playMelody();
+        }
+
+        // ========== AUDIO ENGINE ==========
+        async function playMelody() {
+            const tempo = parseInt(document.getElementById('tempo').value);
+            // Each note plays for half a beat
+            const noteDuration = (60 / tempo) * 0.5;
+
+            // Create a simple synth with triangle wave
+            const synth = new Tone.Synth({
+                oscillator: { type: 'triangle' },
+                envelope: { 
+                    attack: 0.01, 
+                    decay: 0.1, 
+                    sustain: 0.2, 
+                    release: 0.5 
+                }
+            }).toDestination();
+
+            // Start Tone.js audio context
+            await Tone.start();
+
+            // Play each note in sequence
+            for (const note of melody) {
+                synth.triggerAttackRelease(note, noteDuration);
+                await new Promise(r => setTimeout(r, noteDuration * 1000 + 100));
+            }
+        }
+    </script>
+</body>
+</html>
